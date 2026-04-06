@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     sitemap({
-      hostname: 'https://hst-trading.vercel.app',
+      hostname: 'https://hst-trading-xi.vercel.app',
       generateRobotsTxt: true,
       dynamicRoutes: [
         '/',
