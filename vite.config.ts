@@ -9,7 +9,7 @@ export default defineConfig({
     sitemap({
       hostname: 'https://hst-trading.vercel.app',
       generateRobotsTxt: true,
-      routes: [
+      dynamicRoutes: [
         '/',
         '/trends',
         '/news',
