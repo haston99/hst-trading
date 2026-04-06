@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Helmet } from "react-helmet-async"
 import { Link, useNavigate } from "react-router-dom"
 import { motion } from "motion/react"
 import { trendingProductsApi } from "@/lib/api"
@@ -32,6 +33,14 @@ export default function TrendsPage() {
 
   return (
     <div className="min-h-screen bg-background dark:bg-[oklch(0.12_0_0)]">
+      <Helmet>
+        <title>Nouveautés - HST Trading</title>
+        <meta name="description" content="Découvrez les derniers produits tendance importés de Chine. Smartphones, sneakers,electronics et plus encore." />
+        <meta property="og:title" content="Nouveautés - HST Trading" />
+        <meta property="og:description" content="Découvrez les derniers produits tendance importés de Chine." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://hst-trading.vercel.app/trends" />
+      </Helmet>
       <Navbar />
       <main className="pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-6">

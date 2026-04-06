@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Helmet } from "react-helmet-async"
 import { motion } from "motion/react"
 import { Package, Truck, TrendingUp, ChevronDown, ChevronUp } from "lucide-react"
 import { newsPostsApi } from "@/lib/api"
@@ -37,6 +38,14 @@ export default function NewsPage() {
 
   return (
     <div className="min-h-screen bg-background dark:bg-[oklch(0.12_0_0)]">
+      <Helmet>
+        <title>Actualités - HST Trading</title>
+        <meta name="description" content="Dernières nouvelles du marché, arrivages et mises à jour sur HST Trading. Restez informé de nos services d'importation." />
+        <meta property="og:title" content="Actualités - HST Trading" />
+        <meta property="og:description" content="Dernières nouvelles du marché et de nos services d'importation." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://hst-trading.vercel.app/news" />
+      </Helmet>
       <Navbar />
       <main className="pt-24 pb-16">
         <div className="max-w-4xl mx-auto px-6">

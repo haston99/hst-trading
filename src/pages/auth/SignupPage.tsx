@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Helmet } from "react-helmet-async"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -30,6 +31,12 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Helmet>
+        <title>Inscription - HST Trading</title>
+        <meta name="description" content="Créez votre compte HST Trading pour importer vos produits de Chine en toute simplicité." />
+        <meta property="og:title" content="Inscription - HST Trading" />
+        <link rel="canonical" href="https://hst-trading.vercel.app/auth/signup" />
+      </Helmet>
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
           <Link to="/" className="flex items-center gap-2">
