@@ -27,6 +27,12 @@
 | UI Components | Radix UI + shadcn/ui |
 | Backend | InsForge (PostgreSQL + Auth + Realtime) |
 | Testing | Playwright |
+| SEO | react-helmet-async + vite-plugin-sitemap |
+
+### Live URL
+- **Production**: https://hst-trading-xi.vercel.app
+- **Sitemap**: https://hst-trading-xi.vercel.app/sitemap.xml
+- **Robots**: https://hst-trading-xi.vercel.app/robots.txt
 
 ### InsForge Details
 - **Project ID**: `e819736e-a468-4b90-9a40-c0f484985cb1`
@@ -67,7 +73,10 @@ hst-trading/
 │   └── main.tsx         # Entry point
 ├── tests/
 │   └── e2e/             # Playwright tests
-├── SETUP.md             # Database setup instructions
+├── index.html          # Entry HTML with SEO meta tags
+├── vite.config.ts      # Vite config with sitemap plugin
+├── SETUP.md            # Database setup instructions
+├── manual.md           # This file
 ├── playwright.config.ts
 └── package.json
 ```
@@ -378,28 +387,33 @@ CREATE POLICY "news_posts_all" ON news_posts FOR ALL USING (true) WITH CHECK (tr
 
 ## 9. Deployment
 
-### Frontend (Vercel/Netlify/Cloudflare)
+### GitHub + Vercel (Current Setup)
 
 1. **Push to GitHub**
    ```bash
+   cd hst-trading
    git init
    git add .
    git commit -m "Initial commit"
    git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/hst-trading.git
+   git remote add origin https://github.com/haston99/hst-trading.git
    git push -u origin main
    ```
 
 2. **Deploy on Vercel**
    - Go to https://vercel.com
-   - Import your GitHub repository
+   - Import your GitHub repository (hston99/hst-trading)
    - Vercel auto-detects Vite + React
    - Click Deploy
 
-3. **Custom Domain** (optional)
-   - Go to Vercel project settings
-   - Add custom domain
-   - Update DNS records
+3. **Environment Variables**
+   In Vercel project settings → Environment Variables:
+   | Variable | Value |
+   |----------|-------|
+   | `VITE_INSFORGE_URL` | `https://rh4bwu85.us-east.insforge.app` |
+   | `VITE_INSFORGE_ANON_KEY` | `ik_0f9631c409ff804dbd85a18add9ffe1f` |
+
+4. **After adding env vars**: Redeploy to apply changes
 
 ### Backend (InsForge)
 - Already configured
@@ -407,9 +421,37 @@ CREATE POLICY "news_posts_all" ON news_posts FOR ALL USING (true) WITH CHECK (tr
 
 ---
 
-## 10. Environment Variables
+## 10. SEO Configuration
 
-If needed, create `.env`:
+### Meta Tags
+Each page has SEO meta tags using react-helmet-async:
+- Title
+- Meta description
+- Open Graph tags (og:title, og:description, og:image)
+- Canonical URLs
+- Twitter Card tags
+
+### Sitemap
+- Auto-generated at build time by vite-plugin-sitemap
+- Contains all public routes
+- URL: `/sitemap.xml`
+
+### Robots.txt
+- Auto-generated at build time
+- Allows all crawlers
+- URL: `/robots.txt`
+
+### Google Search Console
+- Property: `https://hst-trading-xi.vercel.app`
+- Verification: HTML meta tag in index.html
+- Sitemap submitted: `sitemap.xml`
+
+---
+
+## 11. Environment Variables
+
+The project uses the following environment variables:
+
 ```
 VITE_INSFORGE_URL=https://rh4bwu85.us-east.insforge.app
 VITE_INSFORGE_ANON_KEY=ik_0f9631c409ff804dbd85a18add9ffe1f
@@ -417,7 +459,7 @@ VITE_INSFORGE_ANON_KEY=ik_0f9631c409ff804dbd85a18add9ffe1f
 
 ---
 
-## 11. Troubleshooting
+## 12. Troubleshooting
 
 ### Login not working
 - Check InsForge credentials
@@ -434,25 +476,39 @@ VITE_INSFORGE_ANON_KEY=ik_0f9631c409ff804dbd85a18add9ffe1f
 ### Build errors
 - Run `npm run build` locally first to check for TypeScript errors
 
+### Vercel deployment issues
+- Check Build Settings: Framework Preset should be "Vite"
+- Build command: `npm run build`
+- Output directory: `dist`
+- Install command: `npm install`
+
+### SEO not working
+- Verify sitemap at `/sitemap.xml`
+- Check robots.txt at `/robots.txt`
+- Ensure meta tags are in page source
+
 ---
 
-## 12. Future Enhancements
+## 13. Future Enhancements
 
 - Email notifications
+- Google Analytics integration
 - Analytics dashboard
 - PDF quote generation
 - Payment integration
 - Multi-language support (English)
+- Custom domain (e.g., hst-trading.com)
 
 ---
 
-## 13. Contact
+## 14. Contact
 
 For issues or questions, refer to:
-- InsForge documentation
-- React Router documentation
-- Playwright documentation
+- InsForge documentation: https://insforge.app/docs
+- React Router documentation: https://reactrouter.com
+- Playwright documentation: https://playwright.dev
+- Vercel documentation: https://vercel.com/docs
 
 ---
 
-*Last updated: March 2026*
+*Last updated: April 2026*

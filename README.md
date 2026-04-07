@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# HST Trading
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A sourcing and inspection platform connecting China to Ivory Coast, helping Ivorian businesses import products from Chinese manufacturers.
 
-Currently, two official plugins are available:
+## Live Site
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Production URL**: https://hst-trading-xi.vercel.app
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19 + Vite + TypeScript
+- **Styling**: Tailwind CSS 3.4
+- **Animation**: Motion (Framer Motion)
+- **Routing**: React Router DOM 7
+- **UI Components**: Radix UI + shadcn/ui
+- **Backend**: InsForge (PostgreSQL + Auth + Realtime)
+- **Testing**: Playwright
+- **SEO**: react-helmet-async + vite-plugin-sitemap
 
-## Expanding the ESLint configuration
+## Quick Start
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
+- Node.js 18+
+- npm or yarn
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd hst-trading
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Opens at http://localhost:5173
+
+### Build
+
+```bash
+npm run build
+```
+
+Output in `dist/` folder
+
+### Testing
+
+```bash
+npm test           # Run all tests
+npm run test:ui    # Run with interactive UI
+npm run test:headed # Run with visible browser
+```
+
+## Features
+
+- Landing page with services showcase
+- User authentication (login/signup/verify)
+- Client portal for creating sourcing requests
+- Admin dashboard for managing requests and clients
+- Real-time messaging between clients and admin
+- Product trending page
+- News/updates page
+- SEO optimized with meta tags and sitemap
+
+## Documentation
+
+See [manual.md](./manual.md) for detailed technical documentation.
+
+## License
+
+Private - All rights reserved
