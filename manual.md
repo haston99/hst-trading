@@ -35,13 +35,13 @@
 - **Robots**: https://hst-trading-xi.vercel.app/robots.txt
 
 ### InsForge Details
-- **Project ID**: `e819736e-a468-4b90-9a40-c0f484985cb1`
-- **Backend URL**: `https://rh4bwu85.us-east.insforge.app`
-- **Anon Key**: `ik_0f9631c409ff804dbd85a18add9ffe1f`
+- **Project ID**: `YOUR_PROJECT_ID`
+- **Backend URL**: `https://YOUR_APP.us-east.insforge.app`
+- **Anon Key**: `YOUR_ANON_KEY`
 
 ### Admin Account
-- **Email**: `thabaron222@gmail.com`
-- **Password**: `SilkInspector`
+- **Email**: `admin@yourdomain.com`
+- **Password**: `YOUR_ADMIN_PASSWORD`
 
 ---
 
