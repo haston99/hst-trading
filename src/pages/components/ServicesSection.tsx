@@ -21,7 +21,7 @@ const services = [
   {
     icon: ShoppingCart,
     title: "Shopping Agent",
-    description: "Vous voulez acheter sur Alibaba, 1688, Taobao ou d'autres plateformes chinoises ? Nous gérons vos achats de A à Z.",
+    description: "Vous voulez acheter sur Alibaba, 1688 ou d'autres plateformes chinoises ? Nous gérons vos achats de A à Z.",
     features: ["Achat sur toutes plateformes", "Consolidation des colis", "Suivi en temps réel"],
     color: "from-blue-500/20 to-sky-500/10",
     iconBg: "bg-blue-500/15 text-blue-700",
