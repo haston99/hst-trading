@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ImageUpload } from "@/components/ui/image-upload"
 import { toast } from "sonner"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { requestsApi } from "@/lib/api"
@@ -35,6 +36,8 @@ export default function NewRequest() {
     budgetPerUnit: "",
     currency: "EUR",
   })
+
+  const [uploadedImages, setUploadedImages] = useState<string[]>([])
 
   const images = [
     searchParams.get("image"),
@@ -80,14 +83,34 @@ export default function NewRequest() {
 
     setIsSubmitting(true)
     try {
-      const request = await requestsApi.create({
+      const requestData: {
+        title: string
+        description: string
+        category: string
+        quantity: number
+        budget_per_unit?: number
+        currency: string
+        image_url?: string
+        image_url_2?: string
+        image_url_3?: string
+        image_url_4?: string
+      } = {
         title: form.title,
         description: form.description,
         category: form.category,
         quantity: qty,
         budget_per_unit: form.budgetPerUnit ? parseFloat(form.budgetPerUnit) : undefined,
         currency: form.currency,
-      })
+      }
+
+      if (uploadedImages.length > 0) {
+        requestData.image_url = uploadedImages[0] || undefined
+        requestData.image_url_2 = uploadedImages[1] || undefined
+        requestData.image_url_3 = uploadedImages[2] || undefined
+        requestData.image_url_4 = uploadedImages[3] || undefined
+      }
+
+      const request = await requestsApi.create(requestData)
       toast.success("Demande créée avec succès !")
       navigate(`/portal/requests/${request.id}`)
     } catch (err) {
@@ -257,6 +280,15 @@ export default function NewRequest() {
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Images du produit (optionnel)</Label>
+          <ImageUpload
+            images={uploadedImages}
+            onImagesChange={setUploadedImages}
+            maxImages={4}
+          />
         </div>
 
         <div className="flex gap-3 pt-2">

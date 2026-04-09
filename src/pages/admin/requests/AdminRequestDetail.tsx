@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronLeft, CheckCircle2, Circle, Send, Loader2, Save } from "lucide-react"
+import { ImageUpload } from "@/components/ui/image-upload"
+import { ChevronLeft, CheckCircle2, Circle, Send, Loader2, Save, Image } from "lucide-react"
 import { toast } from "sonner"
 import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
@@ -76,6 +77,8 @@ export default function AdminRequestDetail() {
   const [quotes, setQuotes] = useState<Quote[]>([])
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([])
   const [content, setContent] = useState("")
+  const [uploadedImages, setUploadedImages] = useState<string[]>([])
+  const [showImageUpload, setShowImageUpload] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -213,9 +216,12 @@ export default function AdminRequestDetail() {
         request_id: requestId,
         content: content.trim(),
         sender_role: "admin",
+        image_url: uploadedImages[0] || undefined,
       })
       setMessages(prev => [...prev, newMsg])
       setContent("")
+      setUploadedImages([])
+      setShowImageUpload(false)
       setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 100)
       
       if (realtime.isConnected) {
@@ -475,6 +481,11 @@ export default function AdminRequestDetail() {
                       <div className={cn("max-w-[80%] rounded-2xl px-4 py-2.5", isAdmin ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm")}>
                         <div className="text-[10px] opacity-60 mb-1">{isAdmin ? "HST" : "Client"}</div>
                         <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                        {msg.image_url && (
+                          <a href={msg.image_url} target="_blank" rel="noopener noreferrer" className="block mt-2">
+                            <img src={msg.image_url} alt="Image jointe" className="w-32 h-32 object-cover rounded-lg border" />
+                          </a>
+                        )}
                         <div className={cn("text-[10px] mt-1 opacity-60", isAdmin ? "text-right" : "text-left")}>
                           {new Date(msg.created_at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                         </div>
@@ -486,10 +497,22 @@ export default function AdminRequestDetail() {
               <div ref={bottomRef} />
             </div>
             <div className="flex gap-2">
-              <Textarea value={content} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)} placeholder="Répondre au client..." rows={2} className="resize-none" />
-              <Button onClick={handleSend} disabled={sending || !content.trim()} size="icon" className="shrink-0 h-10 w-10">
-                {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              </Button>
+              <div className="flex-1">
+                <Textarea value={content} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)} placeholder="Répondre au client..." rows={2} className="resize-none" />
+                {showImageUpload && (
+                  <div className="mt-2">
+                    <ImageUpload images={uploadedImages} onImagesChange={setUploadedImages} maxImages={1} />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <Button variant="outline" size="icon" onClick={() => setShowImageUpload(!showImageUpload)} className="shrink-0 h-10 w-10">
+                  <Image className="w-4 h-4" />
+                </Button>
+                <Button onClick={handleSend} disabled={sending || !content.trim()} size="icon" className="shrink-0 h-10 w-10">
+                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

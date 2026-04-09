@@ -15,6 +15,10 @@ export interface Request {
   estimated_delivery: string | null
   admin_notes: string | null
   client_notes: string | null
+  image_url: string | null
+  image_url_2: string | null
+  image_url_3: string | null
+  image_url_4: string | null
   created_at: string
   updated_at: string
 }
@@ -25,6 +29,7 @@ export interface Message {
   user_id: string
   content: string
   sender_role: string
+  image_url: string | null
   created_at: string
 }
 
@@ -60,6 +65,10 @@ export const requestsApi = {
     quantity: number
     budget_per_unit?: number
     currency: string
+    image_url?: string
+    image_url_2?: string
+    image_url_3?: string
+    image_url_4?: string
   }): Promise<Request> {
     const { data, error } = await client.database.from('requests').insert(request).select().single()
     if (error) throw error
@@ -84,6 +93,7 @@ export const messagesApi = {
     request_id: string
     content: string
     sender_role: string
+    image_url?: string
   }): Promise<Message> {
     const { data, error } = await client.database.from('messages').insert(message).select().single()
     if (error) throw error
@@ -316,4 +326,32 @@ export const newsPostsApi = {
     const { error } = await client.database.from('news_posts').delete().eq('id', id)
     if (error) throw error
   }
+}
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png']
+
+export async function uploadImage(file: File, bucket: string = 'hst-trading-uploads'): Promise<string> {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    throw new Error('Seuls les fichiers JPG et PNG sont autorisés')
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error('La taille maximale est de 5MB')
+  }
+  
+  const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+  const { error } = await client.storage.from(bucket).upload(fileName, file)
+  if (error) throw error
+  
+  const publicUrl = client.storage.from(bucket).getPublicUrl(fileName)
+  return publicUrl
+}
+
+export async function uploadImages(files: File[], bucket: string = 'hst-trading-uploads'): Promise<string[]> {
+  const urls: string[] = []
+  for (const file of files) {
+    const url = await uploadImage(file, bucket)
+    urls.push(url)
+  }
+  return urls
 }
