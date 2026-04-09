@@ -410,8 +410,8 @@ CREATE POLICY "news_posts_all" ON news_posts FOR ALL USING (true) WITH CHECK (tr
    In Vercel project settings → Environment Variables:
    | Variable | Value |
    |----------|-------|
-   | `VITE_INSFORGE_URL` | `https://rh4bwu85.us-east.insforge.app` |
-   | `VITE_INSFORGE_ANON_KEY` | `ik_0f9631c409ff804dbd85a18add9ffe1f` |
+   | `VITE_INSFORGE_URL` | `https://your-app.region.insforge.app` |
+   | `VITE_INSFORGE_ANON_KEY` | `your-anon-key` |
 
 4. **After adding env vars**: Redeploy to apply changes
 
@@ -453,8 +453,8 @@ Each page has SEO meta tags using react-helmet-async:
 The project uses the following environment variables:
 
 ```
-VITE_INSFORGE_URL=https://rh4bwu85.us-east.insforge.app
-VITE_INSFORGE_ANON_KEY=ik_0f9631c409ff804dbd85a18add9ffe1f
+VITE_INSFORGE_URL=https://your-app.region.insforge.app
+VITE_INSFORGE_ANON_KEY=your-anon-key
 ```
 
 ---
