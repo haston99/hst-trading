@@ -1,7 +1,7 @@
 import { motion } from "motion/react"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
-import { Mail, MessageCircle, Phone, Package, LogIn } from "lucide-react"
+import { Mail, Phone, Package, LogIn } from "lucide-react"
 
 export default function ContactSection() {
   return (
@@ -40,20 +40,14 @@ export default function ContactSection() {
                 {
                   icon: Phone,
                   label: "WhatsApp / Téléphone",
-                  value: "+225 07 XX XX XX XX",
+                  value: "+86 19576718064",
                   sub: "Disponible 7j/7 de 8h à 20h",
                 },
                 {
                   icon: Mail,
                   label: "Email",
-                  value: "contact@hst-trading.com",
+                  value: "tradinghst@gmail.com",
                   sub: "Réponse sous 24 heures",
-                },
-                {
-                  icon: MessageCircle,
-                  label: "WeChat (pour la Chine)",
-                  value: "HST_Trading",
-                  sub: "Pour contacter nos agents en Chine",
                 },
               ].map((item) => {
                 const Icon = item.icon

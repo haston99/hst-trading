@@ -33,8 +33,8 @@ export default function Footer() {
             <h4 className="text-[oklch(0.95_0_0)] font-semibold mb-3 text-sm">Contact</h4>
             <ul className="space-y-2 text-sm">
               <li>Abidjan, Côte d'Ivoire</li>
-              <li>+225 07 XX XX XX XX</li>
-              <li>contact@hst-trading.com</li>
+              <li>+86 19576718064</li>
+              <li>tradinghst@gmail.com</li>
             </ul>
           </div>
         </div>
