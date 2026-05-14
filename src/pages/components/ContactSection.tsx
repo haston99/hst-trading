@@ -40,7 +40,7 @@ export default function ContactSection() {
                 {
                   icon: Phone,
                   label: "WhatsApp / Téléphone",
-                  value: "+86 19576718064",
+                  value: "+86 19576718067",
                   sub: "Disponible 7j/7 de 8h à 20h",
                 },
                 {
