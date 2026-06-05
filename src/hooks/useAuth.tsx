@@ -94,8 +94,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { requiresVerification: false }
     }
     if (data?.requireEmailVerification) {
-      toast.success("Vérifiez votre email pour confirmer votre compte")
-      return { requiresVerification: true }
+      await rpc("auto_verify_user", { p_email: email })
+      const { data: signInData, error: signInError } = await auth.signInWithPassword({ email, password })
+      if (signInError) {
+        toast.error("Erreur lors de la connexion. Veuillez vous connecter.")
+        throw signInError
+      }
+      if (signInData?.user) {
+        setUser(signInData.user as User)
+        toast.success("Compte créé avec succès !")
+      }
+      return { requiresVerification: false }
     }
     return { requiresVerification: false }
   }
