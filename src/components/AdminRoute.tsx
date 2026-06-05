@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom"
 import { Loader2 } from "lucide-react"
 
 export function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { user, isAdmin, loading } = useAuth()
+  const { user, isAdmin, loading, isAdminLoading } = useAuth()
 
-  if (loading) {
+  if (loading || isAdminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />

@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
-import { auth } from "@/lib/insforge"
+import { auth, rpc } from "@/lib/insforge"
 import { toast } from "sonner"
-
-const ADMIN_EMAIL = "thabaron222@gmail.com"
 
 interface User {
   id: string
@@ -17,6 +15,7 @@ interface User {
 interface AuthContextType {
   user: User | null
   isAdmin: boolean
+  isAdminLoading: boolean
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, name?: string) => Promise<void>
@@ -29,12 +28,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-
-  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdminLoading, setIsAdminLoading] = useState(false)
 
   useEffect(() => {
     checkUser()
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      checkAdmin()
+    } else {
+      setIsAdmin(false)
+    }
+  }, [user])
 
   async function checkUser() {
     try {
@@ -46,6 +53,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Auth error:", err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function checkAdmin() {
+    setIsAdminLoading(true)
+    try {
+      const { data, error } = await rpc("is_admin")
+      if (!error && data) {
+        setIsAdmin(data as boolean)
+      }
+    } catch {
+      setIsAdmin(false)
+    } finally {
+      setIsAdminLoading(false)
     }
   }
 
@@ -101,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signUp, signOut, refreshUser }}>
+    <AuthContext.Provider value={{ user, isAdmin, isAdminLoading, loading, signIn, signUp, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )

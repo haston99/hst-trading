@@ -11,3 +11,4 @@ export const client = createClient({
 export const auth = client.auth
 export const storage = client.storage
 export const realtime = client.realtime
+export const rpc = client.database.rpc.bind(client.database)

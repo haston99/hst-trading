@@ -14,14 +14,11 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ]
 
-const ADMIN_EMAIL = "thabaron222@gmail.com"
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+  const { isAdmin } = useAuth()
 
   const isPageLink = (href: string) => href.startsWith("/")
   const isHomePage = location.pathname === "/"
