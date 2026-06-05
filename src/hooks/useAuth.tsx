@@ -21,6 +21,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, name?: string) => Promise<void>
   signOut: () => Promise<void>
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -66,11 +67,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       toast.error(error.message)
       throw error
     }
-    if (data?.requireEmailVerification) {
-      toast.success("Vérifiez votre email pour confirmer votre compte")
-    } else if (data?.user) {
+    if (data?.user) {
       setUser(data.user as User)
       toast.success("Compte créé avec succès !")
+    } else if (data?.requireEmailVerification) {
+      const { data: signInData, error: signInError } = await auth.signInWithPassword({ email, password })
+      if (signInError) {
+        toast.error("Erreur lors de la connexion automatique. Veuillez vous connecter.")
+        throw signInError
+      }
+      if (signInData?.user) {
+        setUser(signInData.user as User)
+        toast.success("Compte créé avec succès !")
+      }
+    }
+  }
+
+  async function refreshUser() {
+    try {
+      const { data } = await auth.getCurrentUser()
+      if (data?.user) {
+        setUser(data.user as User)
+      }
+    } catch (err) {
+      console.error("Refresh user error:", err)
     }
   }
 
@@ -81,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signUp, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )

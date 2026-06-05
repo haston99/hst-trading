@@ -22,8 +22,9 @@ export default function SignupPage() {
     setLoading(true)
     try {
       await signUp(email, password, name)
-      navigate(`/auth/verify?email=${encodeURIComponent(email)}`)
+      navigate("/portal")
     } catch {
+      // signUp already shows error toast
     } finally {
       setLoading(false)
     }

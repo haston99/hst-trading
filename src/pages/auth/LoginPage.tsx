@@ -23,6 +23,7 @@ export default function LoginPage() {
       await signIn(email, password)
       navigate("/portal")
     } catch {
+      // signIn already shows error toast
     } finally {
       setLoading(false)
     }

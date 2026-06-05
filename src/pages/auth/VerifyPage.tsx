@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Package, Loader2, Mail } from "lucide-react"
 import { auth } from "@/lib/insforge"
+import { useAuth } from "@/hooks/useAuth"
 import { toast } from "sonner"
 
 export default function VerifyPage() {
@@ -13,6 +14,8 @@ export default function VerifyPage() {
   const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const { refreshUser } = useAuth()
+  const navigate = useNavigate()
 
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault()
@@ -26,10 +29,12 @@ export default function VerifyPage() {
         return
       }
       if (verifyData?.user) {
+        await refreshUser()
         setSuccess(true)
-        toast.success("Email vérifié ! Vous pouvez maintenant vous connecter.")
+        toast.success("Email vérifié !")
+        setTimeout(() => navigate("/portal"), 1000)
       }
-    } catch (err) {
+    } catch {
       toast.error("Code invalide")
     } finally {
       setLoading(false)
@@ -46,7 +51,7 @@ export default function VerifyPage() {
         return
       }
       toast.success("Code renvoyé !")
-    } catch (err) {
+    } catch {
       toast.error("Erreur lors du renvoi")
     } finally {
       setLoading(false)
@@ -63,10 +68,10 @@ export default function VerifyPage() {
             </div>
             <h2 className="text-xl font-bold mb-2">Email vérifié !</h2>
             <p className="text-muted-foreground mb-6">
-              Votre compte a été vérifié avec succès.
+              Votre compte a été vérifié avec succès. Redirection en cours...
             </p>
             <Button asChild className="w-full">
-              <Link to="/auth/login">Se connecter</Link>
+              <Link to="/portal">Accéder au tableau de bord</Link>
             </Button>
           </CardContent>
         </Card>

@@ -1,29 +1,10 @@
-import { useEffect, useState } from "react"
+import { useAuth } from "@/hooks/useAuth"
 import { Navigate, useLocation } from "react-router-dom"
-import { auth } from "@/lib/insforge"
 import { Loader2 } from "lucide-react"
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<{ email: string } | null>(null)
+  const { user, loading } = useAuth()
   const location = useLocation()
-
-  useEffect(() => {
-    checkUser()
-  }, [])
-
-  async function checkUser() {
-    try {
-      const { data } = await auth.getCurrentUser()
-      if (data?.user) {
-        setUser({ email: data.user.email })
-      }
-    } catch (err) {
-      console.error("Auth error:", err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   if (loading) {
     return (
