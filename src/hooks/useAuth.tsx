@@ -18,7 +18,7 @@ interface AuthContextType {
   isAdminLoading: boolean
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string, name?: string) => Promise<void>
+  signUp: (email: string, password: string, name?: string) => Promise<{ requiresVerification: boolean }>
   signOut: () => Promise<void>
   refreshUser: () => Promise<void>
 }
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function signUp(email: string, password: string, name?: string) {
+  async function signUp(email: string, password: string, name?: string): Promise<{ requiresVerification: boolean }> {
     const { data, error } = await auth.signUp({ email, password, name })
     if (error) {
       toast.error(error.message)
@@ -91,17 +91,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data?.user) {
       setUser(data.user as User)
       toast.success("Compte créé avec succès !")
-    } else if (data?.requireEmailVerification) {
-      const { data: signInData, error: signInError } = await auth.signInWithPassword({ email, password })
-      if (signInError) {
-        toast.error("Erreur lors de la connexion automatique. Veuillez vous connecter.")
-        throw signInError
-      }
-      if (signInData?.user) {
-        setUser(signInData.user as User)
-        toast.success("Compte créé avec succès !")
-      }
+      return { requiresVerification: false }
     }
+    if (data?.requireEmailVerification) {
+      toast.success("Vérifiez votre email pour confirmer votre compte")
+      return { requiresVerification: true }
+    }
+    return { requiresVerification: false }
   }
 
   async function refreshUser() {

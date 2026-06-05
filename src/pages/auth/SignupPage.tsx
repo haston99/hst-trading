@@ -21,8 +21,12 @@ export default function SignupPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      await signUp(email, password, name)
-      navigate("/portal")
+      const { requiresVerification } = await signUp(email, password, name)
+      if (requiresVerification) {
+        navigate(`/auth/verify?email=${encodeURIComponent(email)}`)
+      } else {
+        navigate("/portal")
+      }
     } catch {
       // signUp already shows error toast
     } finally {
