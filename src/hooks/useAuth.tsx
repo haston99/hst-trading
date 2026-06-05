@@ -60,8 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAdminLoading(true)
     try {
       const { data, error } = await rpc("is_admin")
-      if (!error && data) {
-        setIsAdmin(data as boolean)
+      if (!error && typeof data === "boolean") {
+        setIsAdmin(data)
+      } else {
+        setIsAdmin(false)
       }
     } catch {
       setIsAdmin(false)

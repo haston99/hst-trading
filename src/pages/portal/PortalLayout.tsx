@@ -1,10 +1,10 @@
 import { Outlet, Link } from "react-router-dom"
-import { Package, LogOut, User } from "lucide-react"
+import { Package, LogOut, User, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
 
 export default function PortalLayout() {
-  const { user, signOut } = useAuth()
+  const { user, isAdmin, signOut } = useAuth()
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,6 +27,14 @@ export default function PortalLayout() {
               <LogOut className="w-4 h-4 mr-1" />
               Déconnexion
             </Button>
+            {isAdmin && (
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/admin" className="gap-1.5">
+                  <Shield className="w-4 h-4" />
+                  Admin
+                </Link>
+              </Button>
+            )}
             <Button variant="ghost" size="sm" asChild>
               <Link to="/">← Retour au site</Link>
             </Button>
