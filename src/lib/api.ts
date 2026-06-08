@@ -350,10 +350,13 @@ export async function uploadImage(file: File, bucket: string = 'hst-trading-uplo
   const anonKey = import.meta.env.VITE_INSFORGE_ANON_KEY || 'ik_0f9631c409ff804dbd85a18add9ffe1f'
   const uploadUrl = `${baseUrl}/api/storage/buckets/${bucket}/objects/${key}`
 
+  const formData = new FormData()
+  formData.append('file', file)
+
   const response = await fetch(uploadUrl, {
     method: 'PUT',
-    body: file,
-    headers: { 'Content-Type': file.type, 'x-api-key': anonKey }
+    body: formData,
+    headers: { 'x-api-key': anonKey }
   })
   if (!response.ok) {
     const text = await response.text().catch(() => '')
