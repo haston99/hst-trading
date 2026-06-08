@@ -345,7 +345,7 @@ export async function uploadImage(file: File, bucket: string = 'hst-trading-uplo
     throw new Error('La taille maximale est de 5MB')
   }
 
-  const { data, error } = await client.storage.from(bucket).uploadAuto(file)
+  const { data, error } = await client.storage.from(bucket).upload(file)
   if (error) throw error
   return data!.url
 }
