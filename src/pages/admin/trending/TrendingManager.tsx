@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
+import { ImageUpload } from "@/components/ui/image-upload"
 
 export default function TrendingManager() {
   const [products, setProducts] = useState<TrendingProduct[]>([])
@@ -150,39 +151,21 @@ export default function TrendingManager() {
                   />
                 </div>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="text-sm font-medium">Image principale URL</label>
-                  <Input
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    placeholder="https://... (obligatoire)"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Image 2 URL</label>
-                  <Input
-                    value={formData.image_url_2}
-                    onChange={(e) => setFormData({ ...formData, image_url_2: e.target.value })}
-                    placeholder="https://... (optionnel)"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Image 3 URL</label>
-                  <Input
-                    value={formData.image_url_3}
-                    onChange={(e) => setFormData({ ...formData, image_url_3: e.target.value })}
-                    placeholder="https://... (optionnel)"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Image 4 URL</label>
-                  <Input
-                    value={formData.image_url_4}
-                    onChange={(e) => setFormData({ ...formData, image_url_4: e.target.value })}
-                    placeholder="https://... (optionnel)"
-                  />
-                </div>
+              <div>
+                <label className="text-sm font-medium">Images</label>
+                <ImageUpload
+                  images={[formData.image_url, formData.image_url_2, formData.image_url_3, formData.image_url_4].filter(Boolean)}
+                  onImagesChange={(images) => {
+                    setFormData({
+                      ...formData,
+                      image_url: images[0] || "",
+                      image_url_2: images[1] || "",
+                      image_url_3: images[2] || "",
+                      image_url_4: images[3] || ""
+                    })
+                  }}
+                  maxImages={4}
+                />
               </div>
               <div>
                 <label className="text-sm font-medium">Description</label>

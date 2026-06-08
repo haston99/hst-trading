@@ -260,8 +260,11 @@ export const trendingProductsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await client.database.from('trending_products').delete().eq('id', id)
+    const { data, error } = await client.database.from('trending_products').delete().eq('id', id).select()
     if (error) throw error
+    if (!data || data.length === 0) {
+      throw new Error('Suppression refusée — vérifiez les permissions RLS sur la table trending_products')
+    }
   },
 
   async reorder(products: { id: string; display_order: number }[]): Promise<void> {
@@ -323,8 +326,11 @@ export const newsPostsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await client.database.from('news_posts').delete().eq('id', id)
+    const { data, error } = await client.database.from('news_posts').delete().eq('id', id).select()
     if (error) throw error
+    if (!data || data.length === 0) {
+      throw new Error('Suppression refusée — vérifiez les permissions RLS sur la table news_posts')
+    }
   }
 }
 
