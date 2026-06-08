@@ -337,7 +337,7 @@ export const newsPostsApi = {
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png']
 
-export async function uploadImage(file: File, bucket: string = 'hst-trading-uploads'): Promise<string> {
+export async function uploadImage(file: File): Promise<string> {
   if (!ALLOWED_TYPES.includes(file.type)) {
     throw new Error('Seuls les fichiers JPG et PNG sont autorisés')
   }
@@ -345,37 +345,18 @@ export async function uploadImage(file: File, bucket: string = 'hst-trading-uplo
     throw new Error('La taille maximale est de 5MB')
   }
 
-  const baseUrl = import.meta.env.VITE_INSFORGE_URL || 'https://rh4bwu85.us-east.insforge.app'
-  const anonKey = import.meta.env.VITE_INSFORGE_ANON_KEY || 'ik_0f9631c409ff804dbd85a18add9ffe1f'
-  const apiHeaders = { 'Content-Type': 'application/json', 'x-api-key': anonKey }
-
-  const strategyRes = await fetch(`${baseUrl}/api/storage/buckets/${bucket}/upload-strategy`, {
-    method: 'POST',
-    body: JSON.stringify({ filename: file.name, contentType: file.type, size: file.size }),
-    headers: apiHeaders
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier'))
+    reader.readAsDataURL(file)
   })
-  if (!strategyRes.ok) {
-    const text = await strategyRes.text().catch(() => '')
-    throw new Error(`Upload failed (${strategyRes.status}): ${text || strategyRes.statusText}`)
-  }
-  const strategy = await strategyRes.json()
-
-  const formData = new FormData()
-  formData.append('file', file)
-
-  const uploadRes = await fetch(strategy.uploadUrl, { method: 'PUT', body: formData })
-  if (!uploadRes.ok) {
-    const text = await uploadRes.text().catch(() => '')
-    throw new Error(`Upload failed (${uploadRes.status}): ${text || uploadRes.statusText}`)
-  }
-
-  return strategy.uploadUrl
 }
 
-export async function uploadImages(files: File[], bucket: string = 'hst-trading-uploads'): Promise<string[]> {
+export async function uploadImages(files: File[]): Promise<string[]> {
   const urls: string[] = []
   for (const file of files) {
-    const url = await uploadImage(file, bucket)
+    const url = await uploadImage(file)
     urls.push(url)
   }
   return urls
