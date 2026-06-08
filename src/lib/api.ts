@@ -345,9 +345,23 @@ export async function uploadImage(file: File, bucket: string = 'hst-trading-uplo
     throw new Error('La taille maximale est de 5MB')
   }
 
-  const { data, error } = await client.storage.from(bucket).upload(file)
-  if (error) throw error
-  return data!.url
+  const key = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
+  const baseUrl = import.meta.env.VITE_INSFORGE_URL || 'https://rh4bwu85.us-east.insforge.app'
+  const uploadUrl = `${baseUrl}/api/storage/buckets/${bucket}/objects/${key}`
+
+  const session = await client.auth.getSession()
+  const headers: Record<string, string> = { 'Content-Type': file.type }
+  if (session?.access_token) {
+    headers['Authorization'] = `Bearer ${session.access_token}`
+  }
+
+  const response = await fetch(uploadUrl, { method: 'PUT', body: file, headers })
+  if (!response.ok) {
+    const text = await response.text().catch(() => '')
+    throw new Error(`Upload failed (${response.status}): ${text || response.statusText}`)
+  }
+
+  return uploadUrl
 }
 
 export async function uploadImages(files: File[], bucket: string = 'hst-trading-uploads'): Promise<string[]> {
