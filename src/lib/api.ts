@@ -345,25 +345,31 @@ export async function uploadImage(file: File, bucket: string = 'hst-trading-uplo
     throw new Error('La taille maximale est de 5MB')
   }
 
-  const key = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
   const baseUrl = import.meta.env.VITE_INSFORGE_URL || 'https://rh4bwu85.us-east.insforge.app'
   const anonKey = import.meta.env.VITE_INSFORGE_ANON_KEY || 'ik_0f9631c409ff804dbd85a18add9ffe1f'
-  const uploadUrl = `${baseUrl}/api/storage/buckets/${bucket}/objects/${key}`
+  const apiHeaders = { 'Content-Type': 'application/json', 'x-api-key': anonKey }
+
+  const strategyRes = await fetch(`${baseUrl}/api/storage/buckets/${bucket}/upload-strategy`, {
+    method: 'POST',
+    body: JSON.stringify({ filename: file.name, contentType: file.type, size: file.size }),
+    headers: apiHeaders
+  })
+  if (!strategyRes.ok) {
+    const text = await strategyRes.text().catch(() => '')
+    throw new Error(`Upload failed (${strategyRes.status}): ${text || strategyRes.statusText}`)
+  }
+  const strategy = await strategyRes.json()
 
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await fetch(uploadUrl, {
-    method: 'PUT',
-    body: formData,
-    headers: { 'x-api-key': anonKey }
-  })
-  if (!response.ok) {
-    const text = await response.text().catch(() => '')
-    throw new Error(`Upload failed (${response.status}): ${text || response.statusText}`)
+  const uploadRes = await fetch(strategy.uploadUrl, { method: 'PUT', body: formData })
+  if (!uploadRes.ok) {
+    const text = await uploadRes.text().catch(() => '')
+    throw new Error(`Upload failed (${uploadRes.status}): ${text || uploadRes.statusText}`)
   }
 
-  return uploadUrl
+  return strategy.uploadUrl
 }
 
 export async function uploadImages(files: File[], bucket: string = 'hst-trading-uploads'): Promise<string[]> {
