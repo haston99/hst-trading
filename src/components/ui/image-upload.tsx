@@ -1,4 +1,5 @@
 import { useState, useRef } from "react"
+import { toast } from "sonner"
 import { X, Upload, Loader2 } from "lucide-react"
 import { uploadImages } from "@/lib/api"
 
@@ -31,6 +32,7 @@ export function ImageUpload({
       onImagesChange([...images, ...newImages])
     } catch (err) {
       console.error("Upload failed:", err)
+      toast.error(err instanceof Error ? err.message : "Erreur lors de l'upload")
     } finally {
       setIsUploading(false)
     }
