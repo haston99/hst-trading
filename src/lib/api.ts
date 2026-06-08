@@ -344,13 +344,11 @@ export async function uploadImage(file: File, bucket: string = 'hst-trading-uplo
   if (file.size > MAX_FILE_SIZE) {
     throw new Error('La taille maximale est de 5MB')
   }
-  
+
   const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
-  const { error } = await client.storage.from(bucket).upload(fileName, file)
+  const { data, error } = await client.storage.from(bucket).upload(fileName, file)
   if (error) throw error
-  
-  const publicUrl = client.storage.from(bucket).getPublicUrl(fileName)
-  return publicUrl
+  return data!.url
 }
 
 export async function uploadImages(files: File[], bucket: string = 'hst-trading-uploads'): Promise<string[]> {
